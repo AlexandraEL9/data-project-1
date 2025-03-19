@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import NavTabs from "./components/NavTabs";
-import Sandwiches from "./pages/Sandwiches";
-import Drinks from "./pages/Drinks";
-import Snacks from "./pages/Snacks";
+import Sandwiches from "./components/Sandwiches";
+import Drinks from "./components/Drinks";
+import Snacks from "./components/Snacks";
+
 
 function App() {
   return (

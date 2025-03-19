@@ -10,6 +10,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sales.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
+@app.route("/")
+def home():
+    return "Welcome to the Sandwich Sales API!"
+
 # API route to test database connection
 @app.route("/api/test-db")
 def test_db():
