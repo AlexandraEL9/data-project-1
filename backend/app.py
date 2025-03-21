@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from models import db, Sale
+from models import db, Product
 
 app = Flask(__name__)
 CORS(app)  # Enable cross-origin requests
@@ -14,27 +14,43 @@ db.init_app(app)
 def home():
     return "Welcome to the Sandwich Sales API!"
 
-# API route to test database connection
-@app.route("/api/test-db")
-def test_db():
-    return jsonify({"message": "Database is connected!"})
+# Create the database tables
+with app.app_context():
+    db.create_all()
 
-# API route to add a new sale
-@app.route("/api/sales", methods=["POST"])
-def add_sale():
+# Get all products
+@app.route("/api/products", methods=["GET"])
+def get_products():
+    products = Product.query.all()
+    return jsonify([product.to_dict() for product in products])
+
+# Add a new product
+@app.route("/api/products", methods=["POST"])
+def add_product():
     data = request.json
-    new_sale = Sale(item=data["item"], quantity=data["quantity"], price=data["price"])
-    db.session.add(new_sale)
+    new_product = Product(
+        name=data["name"],
+        category=data["category"],
+        price=data["price"],
+        stock=data["stock"]
+    )
+    db.session.add(new_product)
     db.session.commit()
-    return jsonify({"message": "Sale added!", "sale": new_sale.to_dict()}), 201
+    return jsonify({"message": "Product added!", "product": new_product.to_dict()}), 201
 
-# API route to get all sales
-@app.route("/api/sales", methods=["GET"])
-def get_sales():
-    sales = Sale.query.all()
-    return jsonify([sale.to_dict() for sale in sales])
+# Remove a product
+@app.route("/api/products/<int:product_id>", methods=["DELETE"])
+def delete_product(product_id):
+    product = Product.query.get_or_404(product_id)
+    db.session.delete(product)
+    db.session.commit()
+    return jsonify({"message": "Product deleted!"})
 
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()  # Ensure database is created
-    app.run(debug=True)
+# Update stock count
+@app.route("/api/products/<int:product_id>/update-stock", methods=["PATCH"])
+def update_stock(product_id):
+    data = request.json
+    product = Product.query.get_or_404(product_id)
+    product.stock = data["stock"]
+    db.session.commit()
+    return jsonify({"message": "Stock updated!", "product": product.to_dict()})
