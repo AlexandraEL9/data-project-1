@@ -3,6 +3,7 @@ import NavTabs from "./components/NavTabs";
 import Sandwiches from "./components/Sandwiches";
 import Drinks from "./components/Drinks";
 import Snacks from "./components/Snacks";
+import ProductAdmin from "./pages/ProductAdmin";
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/sandwiches" element={<Sandwiches />} />
           <Route path="/drinks" element={<Drinks />} />
           <Route path="/snacks" element={<Snacks />} />
+          <Route path="/admin" element={<ProductAdmin />} />
         </Routes>
       </div>
     </Router>
