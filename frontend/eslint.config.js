@@ -30,4 +30,13 @@ export default [
       ],
     },
   },
+  // ✅ Jest-specific overrides for test files
+  {
+    files: ['**/*.test.{js,jsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
+    },
+  },
 ]
